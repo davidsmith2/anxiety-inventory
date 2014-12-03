@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Angular Wizard</title>
+    <link rel="stylesheet" href="angular-wizard.css">
+</head>
+<body>
+    <section ng-app="wizard" ng-controller="WizardMainCtrl as mainCtrl">
+        <wizard name="mainWizard" on-finish="mainCtrl.onFinish()">
+            <wz-step ng-repeat="category in mainCtrl.categories" title="{{category}}">
+                <section ng-controller="WizardSubCtrl as subCtrl">
+                    <h1>{{category}}</h1>
+                    <wizard on-finish="subCtrl.onFinish($parent.$last)">
+                        <wz-step ng-repeat="symptom in subCtrl.getSymptoms(category)" title="{{$parent.$index + 1}}.{{$index + 1}}">
+                            <h2>{{symptom.description}}</h2>
+                            <div ng-hide="mainCtrl.isFinished">
+                                <input type="button" ng-hide="{{$last}}" value="Next" wz-next />
+                                <input type="button" ng-show="{{$last}}" value="Finish" wz-finish />
+                            </div>
+                            <div ng-show="mainCtrl.isFinished">
+                                <strong>Fin!</strong>
+                            </div>
+                        </wz-step>
+                    </wizard>
+                </section>
+            </wz-step>
+        </wizard>
+    </section>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>
+    <script type="text/javascript" src="angular-wizard.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+</body>
+</html>
