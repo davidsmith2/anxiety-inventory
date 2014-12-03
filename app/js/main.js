@@ -8,68 +8,8 @@ angular
                     category: 'Anxious Feelings'
                 },
                 {
-                    description: 'Feeling that things around you are strange, unreal or foggy',
-                    category: 'Anxious Feelings'
-                },
-                {
-                    description: 'Feeling detached from all or part of your body',
-                    category: 'Anxious Feelings'
-                },
-                {
-                    description: 'Sudden unexpected panic spells',
-                    category: 'Anxious Feelings'
-                },
-                {
-                    description: 'Apprehension or a sense of impending doom',
-                    category: 'Anxious Feelings'
-                },
-                {
-                    description: 'Feeling tense, stressed, "uptight" or on edge',
-                    category: 'Anxious Feelings'
-                },
-                {
                     description: 'Thinking you\'re on the verge of death',
                     category: 'Anxious Thoughts'
-                },
-                {
-                    description: 'Thinking you\'re on the verge of death',
-                    category: 'Anxious Thoughts'
-                },
-                {
-                    description: 'Thinking you\'re on the verge of death',
-                    category: 'Anxious Thoughts'
-                },
-                {
-                    description: 'Thinking you\'re on the verge of death',
-                    category: 'Anxious Thoughts'
-                },
-                {
-                    description: 'Thinking you\'re on the verge of death',
-                    category: 'Anxious Thoughts'
-                },
-                {
-                    description: 'Thinking you\'re on the verge of death',
-                    category: 'Anxious Thoughts'
-                },
-                {
-                    description: 'Nausea, vomiting, diarrhea',
-                    category: 'Physical Symptoms'
-                },
-                {
-                    description: 'Nausea, vomiting, diarrhea',
-                    category: 'Physical Symptoms'
-                },
-                {
-                    description: 'Nausea, vomiting, diarrhea',
-                    category: 'Physical Symptoms'
-                },
-                {
-                    description: 'Nausea, vomiting, diarrhea',
-                    category: 'Physical Symptoms'
-                },
-                {
-                    description: 'Nausea, vomiting, diarrhea',
-                    category: 'Physical Symptoms'
                 },
                 {
                     description: 'Nausea, vomiting, diarrhea',
