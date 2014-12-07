@@ -1,5 +1,5 @@
 angular
-    .module('wizard', ['mgo-angular-wizard'])
+    .module('bai', ['mgo-angular-wizard'])
     .factory('symptoms', [function () {
         var responses = [
             {
