@@ -3,40 +3,9 @@
 <head>
     <title>Burns Anxiety Inventory</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <style type="text/css">
-    .score {
-        margin-right: 1em;
-    }
-    .alert-minimal {
-        background-color: green;
-        color: white;
-    }
-    .alert-borderline {
-        background-color: yellow;
-        color: black;
-    }
-    .alert-mild {
-        background-color: orange;
-        color: black;
-    }
-    .alert-moderate {
-        background-color: red;
-        color: white;
-    }
-    .alert-severe {
-        background-color: maroon;
-        color: white;
-    }
-    .alert-extreme {
-        background-color: purple;
-        color: white;
-    }
-    .margin-bottom-0 {
-        margin-bottom: 0;
-    }
-    </style>
+    <link href="/css/main.css" rel="stylesheet">
 </head>
-<body ng-app="bai">
+<body ng-app="BAI">
     <div class="container">
         <header class="row">
             <h1 class="h3">Burns Anxiety Inventory</h1>
@@ -51,16 +20,16 @@
                     <dd>{{scoreboardCtrl.getDegree()}}</dd>
                 </dl>
             </section>
-            <section ng-controller="WizardMainCtrl as mainCtrl">
+            <section ng-controller="MainCtrl as mainCtrl">
                 <wizard name="mainWizard" on-finish="mainCtrl.onFinish()">
                     <wz-step ng-init="categoryIndex = $index; isLastCategory = $last" ng-repeat="category in mainCtrl.categories" title="{{category}}">
-                        <section ng-controller="WizardSubCtrl as subCtrl">
+                        <section ng-controller="SubCtrl as subCtrl">
                             <wizard name="subWizard{{categoryIndex}}" on-finish="subCtrl.onFinish(isLastCategory)">
                                 <wz-step ng-init="symptomIndex = $index" ng-repeat="symptom in subCtrl.getSymptoms(category)" title="{{categoryIndex + 1}}.{{symptomIndex + 1}}">
                                     <div ng-controller="FormCtrl as formCtrl">
                                         <form name="myForm" ng-submit="formCtrl.submit(categoryIndex)">
                                             <fieldset>
-                                                <legend class="margin-bottom-0" style="white-space: normal; word-wrap: break-word;">
+                                                <legend class="margin-bottom-0">
                                                     <span>{{symptom.description}}</span>
                                                 </legend>
                                                 <div class="radio" ng-repeat="response in symptom.responses">

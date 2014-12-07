@@ -1,0 +1,30 @@
+.score {
+    margin-right: 1em;
+}
+.alert-minimal {
+    background-color: green;
+    color: white;
+}
+.alert-borderline {
+    background-color: yellow;
+    color: black;
+}
+.alert-mild {
+    background-color: orange;
+    color: black;
+}
+.alert-moderate {
+    background-color: red;
+    color: white;
+}
+.alert-severe {
+    background-color: maroon;
+    color: white;
+}
+.alert-extreme {
+    background-color: purple;
+    color: white;
+}
+.margin-bottom-0 {
+    margin-bottom: 0;
+}
