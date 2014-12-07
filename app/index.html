@@ -26,12 +26,18 @@
     .extreme {
         color: purple;
     }
+    .margin-bottom-0 {
+        margin-bottom: 0;
+    }
     </style>
 </head>
 <body ng-app="bai">
     <div class="container">
+        <header class="page-header text-center">
+            <h1>Burns Anxiety Inventory</h1>
+        </header>
         <div class="row">
-            <div class="col-sm-9">
+            <div class="col-sm-8">
                 <section ng-controller="WizardMainCtrl as mainCtrl">
                     <wizard name="mainWizard" on-finish="mainCtrl.onFinish()">
                         <wz-step ng-init="categoryIndex = $index; isLastCategory = $last" ng-repeat="category in mainCtrl.categories" title="{{category}}">
@@ -39,17 +45,19 @@
                                 <wizard name="subWizard{{categoryIndex}}" on-finish="subCtrl.onFinish(isLastCategory)">
                                     <wz-step ng-init="symptomIndex = $index" ng-repeat="symptom in subCtrl.getSymptoms(category)" title="{{categoryIndex + 1}}.{{symptomIndex + 1}}">
                                         <div ng-controller="FormCtrl as formCtrl">
-                                            <h2>{{symptom.description}}</h2>
-                                            <form ng-submit="formCtrl.submit(categoryIndex)">
-                                                <div ng-repeat="response in symptom.responses">
-                                                    <label>
-                                                        <input name="{{symptom._id}}" ng-model="formCtrl.inventory.response" type="radio" value="{{response.rating}}" />
-                                                        {{response.description}}
-                                                    </label>
-                                                </div>
-                                                <div ng-hide="mainCtrl.isFinished">
-                                                    <input class="btn btn-primary" type="submit" value="Answer" />
-                                                </div>
+                                            <form name="myForm" ng-submit="formCtrl.submit(categoryIndex)">
+                                                <fieldset>
+                                                    <legend class="margin-bottom-0">{{symptom.description}}</legend>
+                                                    <div class="radio" ng-repeat="response in symptom.responses">
+                                                        <label>
+                                                            <input name="{{symptom._id}}" ng-model="formCtrl.inventory.response" required type="radio" value="{{response.rating}}" />
+                                                            {{response.description}}
+                                                        </label>
+                                                    </div>
+                                                    <div ng-hide="mainCtrl.isFinished">
+                                                        <input class="btn btn-primary" ng-disabled="myForm.$invalid" type="submit" value="Answer" />
+                                                    </div>
+                                                </fieldset>
                                             </form>
                                         </div>
                                     </wz-step>
@@ -59,7 +67,7 @@
                     </wizard>
                 </section>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <section ng-controller="ScoreboardCtrl as scoreboardCtrl">
                     <dl>
                         <dt class="h3">
@@ -78,6 +86,9 @@
                 </section>
             </div>
         </div>
+        <footer class="text-center">
+            <small>Made with AngularJS</small>
+        </footer>
     </div>
     <script type="text/javascript" src="/js/lodash.js"></script>
     <script type="text/javascript" src="/js/angular.js"></script>

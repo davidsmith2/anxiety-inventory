@@ -3,16 +3,20 @@ angular
     .factory('symptoms', [function () {
         var responses = [
             {
+                rating: 0,
+                description: 'Not at all'
+            },
+            {
                 rating: 1,
-                description: 'Low'
+                description: 'Somewhat'
             },
             {
                 rating: 2,
-                description: 'Medium'
+                description: 'Moderately'
             },
             {
                 rating: 3,
-                description: 'High'
+                description: 'A lot'
             }
         ];
         var o = {
