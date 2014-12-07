@@ -117,6 +117,9 @@ angular
             addResponse: function (response) {
                 inventory.responses.push(response);
             },
+            getResponses: function () {
+                return inventory.responses;
+            },
             getScore: function () {
                 var score = 0,
                     responses = inventory.responses,
@@ -171,9 +174,15 @@ angular
     .controller('FormCtrl', ['InventoryService', 'WizardHandler', function (InventoryService, WizardHandler) {
         var self = this;
         self.submit = function (categoryIndex) {
-            InventoryService.addResponse(self.inventory.response);
-            self.subWizard = WizardHandler.wizard('subWizard' + categoryIndex);
+            self.advanceWizard(categoryIndex);
+            self.recordResponse();
+        };
+        self.advanceWizard = function (wizardNum) {
+            self.subWizard = WizardHandler.wizard('subWizard' + wizardNum);
             self.subWizard.next();
+        };
+        self.recordResponse = function () {
+            InventoryService.addResponse(self.inventory.response);
         };
     }])
     .controller('ScoreboardCtrl', ['InventoryService', function (InventoryService) {
