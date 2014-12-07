@@ -3,35 +3,81 @@
 <head>
     <title>Angular Wizard</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/angular-wizard.css">
+    <style type="text/css">
+    .score-value, .degree-value {
+        font-size: 2em;
+    }
+    .minimal {
+        color: green;
+    }
+    .borderline {
+        background-color: #aaa;
+        color: yellow;
+    }
+    .mild {
+        color: orange;
+    }
+    .moderate {
+        color: red;
+    }
+    .severe {
+        color: maroon;
+    }
+    .extreme {
+        color: purple;
+    }
+    </style>
 </head>
-<body>
+<body ng-app="wizard">
     <div class="container">
-        <section ng-app="wizard" ng-controller="WizardMainCtrl as mainCtrl">
-            <wizard name="mainWizard" on-finish="mainCtrl.onFinish()">
-                <wz-step ng-init="categoryIndex = $index; isLastCategory = $last" ng-repeat="category in mainCtrl.categories" title="{{category}}">
-                    <section ng-controller="WizardSubCtrl as subCtrl">
-                        <h1>{{category}}</h1>
-                        <wizard name="subWizard{{categoryIndex}}" on-finish="subCtrl.onFinish(isLastCategory)">
-                            <wz-step ng-init="symptomIndex = $index" ng-repeat="symptom in subCtrl.getSymptoms(category)" title="{{symptom.description}}">
-                                <div ng-controller="FormCtrl as formCtrl">
-                                    <h2>{{symptom.description}}</h2>
-                                    <form ng-submit="formCtrl.submit(categoryIndex)">
-                                        <div ng-repeat="response in symptom.responses">
-                                            <label>
-                                                <input name="{{symptom._id}}" ng-model="formCtrl.symptom.response" type="radio" value="{{response.rating}}" />
-                                                {{response.description}}
-                                            </label>
+        <div class="row">
+            <div class="col-sm-9">
+                <section ng-controller="WizardMainCtrl as mainCtrl">
+                    <wizard name="mainWizard" on-finish="mainCtrl.onFinish()">
+                        <wz-step ng-init="categoryIndex = $index; isLastCategory = $last" ng-repeat="category in mainCtrl.categories" title="{{category}}">
+                            <section ng-controller="WizardSubCtrl as subCtrl">
+                                <wizard name="subWizard{{categoryIndex}}" on-finish="subCtrl.onFinish(isLastCategory)">
+                                    <wz-step ng-init="symptomIndex = $index" ng-repeat="symptom in subCtrl.getSymptoms(category)" title="{{categoryIndex + 1}}.{{symptomIndex + 1}}">
+                                        <div ng-controller="FormCtrl as formCtrl">
+                                            <h2>{{symptom.description}}</h2>
+                                            <form ng-submit="formCtrl.submit(categoryIndex)">
+                                                <div ng-repeat="response in symptom.responses">
+                                                    <label>
+                                                        <input name="{{symptom._id}}" ng-model="formCtrl.inventory.response" type="radio" value="{{response.rating}}" />
+                                                        {{response.description}}
+                                                    </label>
+                                                </div>
+                                                <div ng-hide="mainCtrl.isFinished">
+                                                    <input class="btn btn-primary" type="submit" value="Answer" />
+                                                </div>
+                                            </form>
                                         </div>
-                                        <input class="btn btn-primary" type="submit" value="Answer" />
-                                    </form>
-                                </div>
-                            </wz-step>
-                        </wizard>
-                    </section>
-                </wz-step>
-            </wizard>
-        </section>
+                                    </wz-step>
+                                </wizard>
+                            </section>
+                        </wz-step>
+                    </wizard>
+                </section>
+            </div>
+            <div class="col-sm-3">
+                <section ng-controller="ScoreboardCtrl as scoreboardCtrl">
+                    <dl>
+                        <dt class="h3">
+                            Total Score
+                        </dt>
+                            <dd class="h3">
+                                {{scoreboardCtrl.getScore()}}
+                            </dd>
+                        <dt class="h3">
+                            Degree of Anxiety
+                        </dt>
+                            <dd class="h3" ng-class="scoreboardCtrl.getDegree().toLowerCase()">
+                                {{scoreboardCtrl.getDegree()}}
+                            </dd>
+                    </dl>
+                </section>
+            </div>
+        </div>
     </div>
     <script type="text/javascript" src="/js/lodash.js"></script>
     <script type="text/javascript" src="/js/angular.js"></script>

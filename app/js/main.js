@@ -19,71 +19,59 @@ angular
             collection: [
                 {
                     _id: '1',
-                    description: '1.1',
+                    description: 'Anxiety, nervousness, worry, or fear',
                     responses: responses,
-                    response: 'test',
                     category: 'Anxious Feelings'
                 },
                 {
                     _id: '2',
-                    description: '1.2',
+                    description: 'Feeling that things around you are strange, unreal, or foggy',
                     responses: responses,
-                    response: null,
                     category: 'Anxious Feelings'
                 },
                 {
                     _id: '3',
-                    description: '1.3',
+                    description: 'Feeling detached from all or part of your body',
                     responses: responses,
-                    response: null,
                     category: 'Anxious Feelings'
                 },
                 {
                     _id: '4',
-                    description: '1.4',
+                    description: 'Difficulty concentrating',
                     responses: responses,
-                    response: null,
                     category: 'Anxious Thoughts'
                 },
                 {
                     _id: '5',
-                    description: '1.5',
+                    description: 'Racing thoughts or having your mind jump from one thing to the next',
                     responses: responses,
-                    response: null,
                     category: 'Anxious Thoughts'
                 },
                 {
                     _id: '6',
-                    description: '1.6',
+                    description: 'Frightening fantasies or daydreams',
                     responses: responses,
-                    response: null,
                     category: 'Anxious Thoughts'
                 },
                 {
                     _id: '7',
-                    description: '1.7',
+                    description: 'Skipping or racing or pounding of the heart (sometimes called "palpitations")',
                     responses: responses,
-                    response: null,
                     category: 'Physical Symptoms'
                 },
                 {
                     _id: '8',
-                    description: '1.8',
+                    description: 'Pain, pressure, or tightness in the chest',
                     responses: responses,
-                    response: null,
                     category: 'Physical Symptoms'
                 },
                 {
                     _id: '9',
-                    description: '1.9',
+                    description: 'Tingling or numbness in the toes or fingers',
                     responses: responses,
-                    response: null,
                     category: 'Physical Symptoms'
                 }
             ],
-            get: function () {
-                return o.collection;
-            },
             getCategories: function () {
                 var array = o.collection,
                     unique = {},
@@ -102,12 +90,50 @@ angular
         };
         return o;
     }])
-    .controller('WizardMainCtrl', ['symptoms', function (symptoms) {
+    .factory('inventory', [function () {
+        var o = {
+            model: {
+                date: new Date(),
+                responses: []
+            },
+            addResponse: function (response) {
+                o.model.responses.push(response);
+            },
+            getScore: function () {
+                var score = 0,
+                    responses = o.model.responses,
+                    i;
+                for (i = 0; i < responses.length; i++) {
+                    score += parseInt(responses[i], 10);
+                }
+                return score;
+            },
+            getDegree: function (score) {
+                var degree = '';
+                if (score <= 4) {
+                    degree = 'Minimal';
+                } else if (score <= 10) {
+                    degree = 'Borderline';
+                } else if (score <= 20) {
+                    degree = 'Mild';
+                } else if (score <= 30) {
+                    degree = 'Moderate';
+                } else if (score <= 50) {
+                    degree = 'Severe';
+                } else {
+                    degree = 'Extreme';
+                }
+                return degree;
+            }
+        };
+        return o;
+    }])
+    .controller('WizardMainCtrl', ['symptoms', 'inventory', function (symptoms) {
         var self = this;
-        self.numSymptoms = symptoms.get().length;
         self.categories = symptoms.getCategories();
+        self.isFinished = false;
         self.onFinish = function () {
-            console.log('finished');
+            self.isFinished = true;
         };
     }])
     .controller('WizardSubCtrl', ['symptoms', 'WizardHandler', function (symptoms, WizardHandler) {
@@ -124,10 +150,20 @@ angular
             }
         };
     }])
-    .controller('FormCtrl', ['WizardHandler', function (WizardHandler) {
+    .controller('FormCtrl', ['WizardHandler', 'inventory', function (WizardHandler, inventory) {
         var self = this;
         self.submit = function (categoryIndex) {
+            inventory.addResponse(self.inventory.response);
             self.subWizard = WizardHandler.wizard('subWizard' + categoryIndex);
             self.subWizard.next();
+        };
+    }])
+    .controller('ScoreboardCtrl', ['inventory', function (inventory) {
+        var self = this;
+        self.getScore = function () {
+            return inventory.getScore();
+        };
+        self.getDegree = function () {
+            return inventory.getDegree(inventory.getScore());
         };
     }]);
