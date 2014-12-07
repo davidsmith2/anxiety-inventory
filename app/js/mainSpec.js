@@ -25,10 +25,27 @@ describe('Controller: SubCtrl', function () {
     }));
 
     it('should have symptoms available on load', function () {
-        expect(ctrl.getSymptoms('Anxious Feelings')).toEqual([{
-            description: 'Anxiety, nervousness, worry or fear',
+        var symptoms = ctrl.getSymptoms('Anxious Feelings');
+        expect(symptoms[0]).toEqual({
+            _id: '1',
+            description: '1.1',
+            responses: [
+                {
+                    rating: 1,
+                    description: 'Low'
+                },
+                {
+                    rating: 2,
+                    description: 'Medium'
+                },
+                {
+                    rating: 3,
+                    description: 'High'
+                }
+            ],
+            response: null,
             category: 'Anxious Feelings'
-        }]);
+        });
     });
 
 });

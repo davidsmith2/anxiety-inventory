@@ -1,21 +1,89 @@
 angular
     .module('wizard', ['mgo-angular-wizard'])
     .factory('symptoms', [function () {
+        var responses = [
+            {
+                rating: 1,
+                description: 'Low'
+            },
+            {
+                rating: 2,
+                description: 'Medium'
+            },
+            {
+                rating: 3,
+                description: 'High'
+            }
+        ];
         var o = {
             collection: [
                 {
-                    description: 'Anxiety, nervousness, worry or fear',
+                    _id: '1',
+                    description: '1.1',
+                    responses: responses,
+                    response: 'test',
                     category: 'Anxious Feelings'
                 },
                 {
-                    description: 'Thinking you\'re on the verge of death',
+                    _id: '2',
+                    description: '1.2',
+                    responses: responses,
+                    response: null,
+                    category: 'Anxious Feelings'
+                },
+                {
+                    _id: '3',
+                    description: '1.3',
+                    responses: responses,
+                    response: null,
+                    category: 'Anxious Feelings'
+                },
+                {
+                    _id: '4',
+                    description: '1.4',
+                    responses: responses,
+                    response: null,
                     category: 'Anxious Thoughts'
                 },
                 {
-                    description: 'Nausea, vomiting, diarrhea',
+                    _id: '5',
+                    description: '1.5',
+                    responses: responses,
+                    response: null,
+                    category: 'Anxious Thoughts'
+                },
+                {
+                    _id: '6',
+                    description: '1.6',
+                    responses: responses,
+                    response: null,
+                    category: 'Anxious Thoughts'
+                },
+                {
+                    _id: '7',
+                    description: '1.7',
+                    responses: responses,
+                    response: null,
+                    category: 'Physical Symptoms'
+                },
+                {
+                    _id: '8',
+                    description: '1.8',
+                    responses: responses,
+                    response: null,
+                    category: 'Physical Symptoms'
+                },
+                {
+                    _id: '9',
+                    description: '1.9',
+                    responses: responses,
+                    response: null,
                     category: 'Physical Symptoms'
                 }
             ],
+            get: function () {
+                return o.collection;
+            },
             getCategories: function () {
                 var array = o.collection,
                     unique = {},
@@ -36,10 +104,10 @@ angular
     }])
     .controller('WizardMainCtrl', ['symptoms', function (symptoms) {
         var self = this;
+        self.numSymptoms = symptoms.get().length;
         self.categories = symptoms.getCategories();
-        self.isFinished = false;
         self.onFinish = function () {
-            self.isFinished = true;
+            console.log('finished');
         };
     }])
     .controller('WizardSubCtrl', ['symptoms', 'WizardHandler', function (symptoms, WizardHandler) {
@@ -48,11 +116,18 @@ angular
         self.getSymptoms = function (category) {
             return symptoms.getSymptomsByCategory(category);
         };
-        self.onFinish = function (mainWizardIsFinished) {
-            if (!mainWizardIsFinished) {
+        self.onFinish = function (isLastCategory) {
+            if (!isLastCategory) {
                 self.mainWizard.next();
             } else {
                 self.mainWizard.finish();
             }
+        };
+    }])
+    .controller('FormCtrl', ['WizardHandler', function (WizardHandler) {
+        var self = this;
+        self.submit = function (categoryIndex) {
+            self.subWizard = WizardHandler.wizard('subWizard' + categoryIndex);
+            self.subWizard.next();
         };
     }]);

@@ -2,30 +2,37 @@
 <html>
 <head>
     <title>Angular Wizard</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/angular-wizard.css">
 </head>
 <body>
-    <section ng-app="wizard" ng-controller="WizardMainCtrl as mainCtrl">
-        <wizard name="mainWizard" on-finish="mainCtrl.onFinish()">
-            <wz-step ng-repeat="category in mainCtrl.categories" title="{{category}}">
-                <section ng-controller="WizardSubCtrl as subCtrl">
-                    <h1>{{category}}</h1>
-                    <wizard on-finish="subCtrl.onFinish($parent.$last)">
-                        <wz-step ng-repeat="symptom in subCtrl.getSymptoms(category)" title="{{$parent.$index + 1}}.{{$index + 1}}">
-                            <h2>{{symptom.description}}</h2>
-                            <div ng-hide="mainCtrl.isFinished">
-                                <input type="button" ng-hide="{{$last}}" value="Next" wz-next />
-                                <input type="button" ng-show="{{$last}}" value="Finish" wz-finish />
-                            </div>
-                            <div ng-show="mainCtrl.isFinished">
-                                <strong>Fin!</strong>
-                            </div>
-                        </wz-step>
-                    </wizard>
-                </section>
-            </wz-step>
-        </wizard>
-    </section>
+    <div class="container">
+        <section ng-app="wizard" ng-controller="WizardMainCtrl as mainCtrl">
+            <wizard name="mainWizard" on-finish="mainCtrl.onFinish()">
+                <wz-step ng-init="categoryIndex = $index; isLastCategory = $last" ng-repeat="category in mainCtrl.categories" title="{{category}}">
+                    <section ng-controller="WizardSubCtrl as subCtrl">
+                        <h1>{{category}}</h1>
+                        <wizard name="subWizard{{categoryIndex}}" on-finish="subCtrl.onFinish(isLastCategory)">
+                            <wz-step ng-init="symptomIndex = $index" ng-repeat="symptom in subCtrl.getSymptoms(category)" title="{{symptom.description}}">
+                                <div ng-controller="FormCtrl as formCtrl">
+                                    <h2>{{symptom.description}}</h2>
+                                    <form ng-submit="formCtrl.submit(categoryIndex)">
+                                        <div ng-repeat="response in symptom.responses">
+                                            <label>
+                                                <input name="{{symptom._id}}" ng-model="formCtrl.symptom.response" type="radio" value="{{response.rating}}" />
+                                                {{response.description}}
+                                            </label>
+                                        </div>
+                                        <input class="btn btn-primary" type="submit" value="Answer" />
+                                    </form>
+                                </div>
+                            </wz-step>
+                        </wizard>
+                    </section>
+                </wz-step>
+            </wizard>
+        </section>
+    </div>
     <script type="text/javascript" src="/js/lodash.js"></script>
     <script type="text/javascript" src="/js/angular.js"></script>
     <script type="text/javascript" src="/js/angular-wizard.js"></script>
