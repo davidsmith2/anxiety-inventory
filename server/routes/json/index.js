@@ -1,5 +1,7 @@
 var mongoose = require('mongoose'),
-    Inventory = require('../../models/Inventory');
+    Inventory = require('../../models/Inventory'),
+    Question = require('../../models/Question'),
+    Choice = require('../../models/Choice');
 
 module.exports = function (app, bodyParser) {
     var jsonParser = bodyParser.json();
@@ -13,20 +15,39 @@ module.exports = function (app, bodyParser) {
         });
     });
     app.post('/inventories', urlencodedParser, function (req, res, next) {
-        var _inventory_ = new Inventory(req.body);
-        _inventory_.save(function (err, inventory) {
+        var inventory = new Inventory(req.body);
+        Question.find(function (err, questions) {
+            Choice.find(function (err, choices) {
+                for (var i = 0; i < questions.length; i++) {
+                    questions[i].choices = choices;
+                }
+                inventory.questions = questions;
+                inventory.save(function (err, inventory) {
+                    if (err) {
+                        return next(err);
+                    }
+                    res.json(inventory);
+                });
+            });
+        });
+    });
+    app.get('/inventories/:inventory', function (req, res) {
+        res.json(req.inventory);
+    });
+    app.param('inventory', function (req, res, next, id) {
+        var query = Inventory.findById(id);
+        query.exec(function (err, inventory) {
             if (err) {
                 return next(err);
             }
-            res.json(inventory);
+            if (!inventory) {
+                return next(new Error("Can't find inventory"));
+            }
+            req.inventory = inventory;
+            return next();
         });
     });
 /*
-    app.get('/posts/:post', function (req, res) {
-        req.post.populate('comments', function (err, post) {
-            res.json(req.post);
-        });
-    });
     app.put('/posts/:post/upvote', function (req, res, next) {
         req.post.upvote(function (err, post) {
             if (err) {
@@ -76,19 +97,6 @@ module.exports = function (app, bodyParser) {
                 return next(err);
             }
             res.json(comment);
-        });
-    });
-    app.param('post', function (req, res, next, id) {
-        var query = Post.findById(id);
-        query.exec(function (err, post) {
-            if (err) {
-                return next(err);
-            }
-            if (!post) {
-                return next(new Error("Can't find post"));
-            }
-            req.post = post;
-            return next();
         });
     });
     app.param('comment', function (req, res, next, id) {
