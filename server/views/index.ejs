@@ -8,55 +8,57 @@
 <body ng-app="BAI">
     <div class="container">
         <header class="row">
-            <h1 class="h3"><%= title %></h1>
-            <p>Rate how much each symptom has bothered you during the past week.</p>
+            <h1><%= title %></h1>
         </header>
         <article class="row">
-            <section ng-controller="ScoreboardCtrl as scoreboardCtrl">
-                <dl class="dl-horizontal alert alert-{{scoreboardCtrl.getDegree().toLowerCase()}}">
-                    <dt>Score:</dt>
-                    <dd>{{scoreboardCtrl.getScore()}}</dd>
-                    <dt>Degree of anxiety:</dt>
-                    <dd>{{scoreboardCtrl.getDegree()}}</dd>
-                </dl>
-            </section>
-            <section ng-controller="MainCtrl as mainCtrl">
-                <wizard name="mainWizard" on-finish="mainCtrl.onFinish()">
-                    <wz-step ng-init="categoryIndex = $index; isLastCategory = $last" ng-repeat="category in mainCtrl.categories" title="{{category}}">
-                        <section ng-controller="SubCtrl as subCtrl">
-                            <wizard name="subWizard{{categoryIndex}}" on-finish="subCtrl.onFinish(isLastCategory)">
-                                <wz-step ng-init="symptomIndex = $index" ng-repeat="symptom in subCtrl.getSymptoms(category)" title="{{categoryIndex + 1}}.{{symptomIndex + 1}}">
-                                    <div ng-controller="FormCtrl as formCtrl">
-                                        <form name="myForm" ng-submit="formCtrl.submit(categoryIndex)">
-                                            <fieldset>
-                                                <legend class="margin-bottom-0">
-                                                    <span>{{symptom.description}}</span>
-                                                </legend>
-                                                <div class="radio" ng-repeat="response in symptom.responses">
-                                                    <label>
-                                                        <input name="{{symptom._id}}" ng-model="formCtrl.inventory.response" required type="radio" value="{{response.rating}}" />
-                                                        {{response.description}}
-                                                    </label>
-                                                </div>
-                                                <div ng-hide="mainCtrl.isFinished">
-                                                    <input class="btn btn-primary" ng-disabled="myForm.$invalid" type="submit" value="Answer" />
-                                                </div>
-                                            </fieldset>
-                                        </form>
-                                    </div>
-                                </wz-step>
-                            </wizard>
-                        </section>
-                    </wz-step>
-                </wizard>
-            </section>
+            <ui-view></ui-view>
         </article>
         <footer class="row">
             <small>Made with AngularJS</small>
         </footer>
     </div>
+    <script type="text/ng-template" id="/index.html">
+        <section ng-controller="IndexController as indexController">
+            <h2>Inventories</h2>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Score</th>
+                        <th class="text-center">Degree</th>
+                        <th colspan=2>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="inventory in indexController.inventories">
+                        <td class="text-center">
+                            {{indexController.formatDate(inventory.date)}}
+                        </td>
+                        <td class="text-center">
+                            {{inventory.score}}
+                        </td>
+                        <td class="text-center">
+                            {{inventory.degree}}
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-primary btn-sm" href="#/inventories/{{inventory._id}}" ng-click="indexController.showInventory(inventory)">Show</a>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-default btn-sm" ng-click="indexController.deleteInventory(inventory)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </script>
+    <script type="text/ng-template" id="/show.html">
+        <h2>Inventory</h2>
+        <p>Rate how much each symptom has bothered you during the past week.</p>
+    </script>
     <script type="text/javascript" src="/js/lodash.js"></script>
     <script type="text/javascript" src="/js/angular.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
+    <script type="text/javascript" src="/js/moment.js"></script>
     <script type="text/javascript" src="/js/angular-wizard.js"></script>
     <script type="text/javascript" src="/js/main.js"></script>
 </body>

@@ -1,0 +1,40 @@
+        <h2>Inventory</h2>
+        <p>Rate how much each symptom has bothered you during the past week.</p>
+        <section ng-controller="MainCtrl as mainCtrl">
+            <wizard name="mainWizard" on-finish="mainCtrl.onFinish()">
+                <wz-step ng-init="categoryIndex = $index; isLastCategory = $last" ng-repeat="category in mainCtrl.categories" title="{{category}}">
+                    <section ng-controller="SubCtrl as subCtrl">
+                        <wizard name="subWizard{{categoryIndex}}" on-finish="subCtrl.onFinish(isLastCategory)">
+                            <wz-step ng-init="symptomIndex = $index" ng-repeat="symptom in subCtrl.getSymptoms(category)" title="{{categoryIndex + 1}}.{{symptomIndex + 1}}">
+                                <div ng-controller="FormCtrl as formCtrl">
+                                    <form name="myForm" ng-submit="formCtrl.submit(categoryIndex)">
+                                        <fieldset>
+                                            <legend class="margin-bottom-0">
+                                                <span>{{symptom.description}}</span>
+                                            </legend>
+                                            <div class="radio" ng-repeat="response in symptom.responses">
+                                                <label>
+                                                    <input name="{{symptom._id}}" ng-model="formCtrl.inventory.response" required type="radio" value="{{response.rating}}" />
+                                                    {{response.description}}
+                                                </label>
+                                            </div>
+                                            <div ng-hide="mainCtrl.isFinished">
+                                                <input class="btn btn-primary" ng-disabled="myForm.$invalid" type="submit" value="Answer" />
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </wz-step>
+                        </wizard>
+                    </section>
+                </wz-step>
+            </wizard>
+        </section>
+        <section ng-controller="ScoreboardCtrl as scoreboardCtrl">
+            <dl class="dl-horizontal alert alert-{{scoreboardCtrl.getDegree().toLowerCase()}}">
+                <dt>Score:</dt>
+                <dd>{{scoreboardCtrl.getScore()}}</dd>
+                <dt>Degree of anxiety:</dt>
+                <dd>{{scoreboardCtrl.getDegree()}}</dd>
+            </dl>
+        </section>

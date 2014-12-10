@@ -4,9 +4,8 @@ var mongoose = require('mongoose'),
 
 var InventorySchema = new Schema({
     answers: [{type: Schema.Types.ObjectId, ref: 'Answer'}],
-    date: Date,
-    questions: [QuestionSchema],
-    title: String
+    date: {type: Date, default: Date.now},
+    score: Number
 });
 
 module.exports = mongoose.model('Inventory', InventorySchema);

@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 module.exports = function (app, bodyParser) {
     var jsonParser = bodyParser.json();
     var urlencodedParser = bodyParser.urlencoded({extended: false});
-    app.get('/inventories', function (req, res, next) {
+    app.get('/api/inventories', function (req, res, next) {
         Inventory.find(function (err, inventories) {
             if (err) {
                 return next(err);
@@ -14,7 +14,7 @@ module.exports = function (app, bodyParser) {
             res.json(inventories);
         });
     });
-    app.post('/inventories', urlencodedParser, function (req, res, next) {
+    app.post('/api/inventories', urlencodedParser, function (req, res, next) {
         var inventory = new Inventory(req.body);
         Question.find(function (err, questions) {
             Choice.find(function (err, choices) {
@@ -31,8 +31,16 @@ module.exports = function (app, bodyParser) {
             });
         });
     });
-    app.get('/inventories/:inventory', function (req, res) {
+    app.get('/api/inventories/:inventory', function (req, res) {
         res.json(req.inventory);
+    });
+    app['delete']('/api/inventories/:inventory', function (req, res, next) {
+        req.inventory.remove(function (err) {
+            if (err) {
+                return next(err);
+            }
+            return res.send('');
+        });
     });
     app.param('inventory', function (req, res, next, id) {
         var query = Inventory.findById(id);
