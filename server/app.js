@@ -8,7 +8,7 @@ var bodyParser = require('body-parser'),
 
 app = express();
 
-mongoose.connect('mongodb://localhost/burns-anxiety-inventory');
+mongoose.connect('mongodb://localhost/anxiety-inventory');
 
 app.set('port', process.env.PORT || 8888);
 app.set('views', __dirname + '/views');

@@ -17,8 +17,10 @@ module.exports = function(config) {
     files: [
       'js/lodash.js',
       'js/angular.js',
+      'js/angular-ui-router.js',
       'js/angular-mocks.js',
       'js/angular-wizard.js',
+      'js/moment.js',
       'js/main.js',
       'js/mainSpec.js'
     ],
