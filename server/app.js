@@ -2,13 +2,12 @@ var bodyParser = require('body-parser'),
     ejs = require('ejs'),
     express = require('express'),
     http = require('http'),
-    mongoose = require('mongoose'),
     path = require('path'),
     app;
 
-app = express();
+require('./dbConnect');
 
-mongoose.connect('mongodb://localhost/anxiety-inventory');
+app = express();
 
 app.set('port', process.env.PORT || 8888);
 app.set('views', __dirname + '/views');
