@@ -1,3 +1,7 @@
+var formatDate = function (date) {
+    return moment(date).format('dddd');
+};
+
 var app = angular.module('app', ['mongolabResourceHttp', 'ui.router', 'mgo-angular-wizard']);
 
 app.constant('MONGOLAB_CONFIG', {
@@ -7,10 +11,10 @@ app.constant('MONGOLAB_CONFIG', {
 
 app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     $stateProvider
-        .state('index', {
+        .state('list', {
             url: '/inventories',
-            templateUrl: '/index.html',
-            controller: 'IndexController'
+            templateUrl: '/list.html',
+            controller: 'ListController'
         })
         .state('show', {
             url: '/inventories/{id}',
@@ -24,13 +28,11 @@ app.factory('Inventory', function ($mongolabResourceHttp) {
     return $mongolabResourceHttp('inventories');
 });
 
-app.controller('IndexController', ['Inventory', function (Inventory) {
+app.controller('ListController', ['Inventory', function (Inventory) {
     var self = this;
     Inventory.all().then(function (inventories) {
         self.inventories = inventories;
-        self.formatDate = function (date) {
-            return moment(date).format('dddd');
-        };
+        self.formatDate = formatDate;
     });
 }]);
 
@@ -38,8 +40,6 @@ app.controller('ShowController', ['Inventory', '$stateParams', function (Invento
     var self = this;
     Inventory.getById($stateParams.id).then(function (inventory) {
         self.inventory = inventory;
-        self.formatDate = function (date) {
-            return moment(date).format('dddd');
-        };
+        self.formatDate = formatDate;
     });
 }]);

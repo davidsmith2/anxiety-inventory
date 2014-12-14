@@ -17,8 +17,8 @@
             <small>Made with AngularJS</small>
         </footer>
     </div>
-    <script type="text/ng-template" id="/index.html">
-        <section ng-controller="IndexController as indexController">
+    <script type="text/ng-template" id="/list.html">
+        <section ng-controller="ListController as listController">
             <h2>Inventories</h2>
             <table class="table table-striped table-bordered">
                 <thead>
@@ -30,9 +30,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="inventory in indexController.inventories">
+                    <tr ng-repeat="inventory in listController.inventories">
                         <td class="text-center">
-                            {{indexController.formatDate(inventory.date)}}
+                            {{listController.formatDate(inventory.date)}}
                         </td>
                         <td class="text-center">
                             {{inventory.score}}
